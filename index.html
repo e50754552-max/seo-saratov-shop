@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SEO SARATOV — автотовары в Саратове</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: #0f1115;
+    color: #e8e8ee;
+  }
+
+  /* Шапка */
+  header {
+    position: sticky; top: 0; z-index: 10;
+    background: #16181f;
+    border-bottom: 2px solid #ff6a00;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 5vw;
+    flex-wrap: wrap; gap: 10px;
+  }
+  .logo { font-size: 24px; font-weight: 900; letter-spacing: 1px; }
+  .logo span { color: #ff6a00; }
+  header nav a {
+    color: #cfd2da; text-decoration: none; margin: 0 12px; font-size: 15px;
+  }
+  header nav a:hover { color: #ff6a00; }
+  .header-btns { display: flex; gap: 8px; }
+  .cart-btn, .admin-btn {
+    border: none; padding: 10px 18px; border-radius: 8px;
+    cursor: pointer; font-weight: bold; color: #fff;
+  }
+  .cart-btn { background: #ff6a00; }
+  .admin-btn { background: #2a2f3d; border: 1px solid #3a4053; }
+
+  /* Главный блок */
+  .hero {
+    text-align: center; padding: 70px 5vw 50px;
+    background: linear-gradient(160deg, #1a1d26 0%, #0f1115 70%);
+  }
+  .hero h1 { font-size: clamp(28px, 5vw, 46px); }
+  .hero h1 em { color: #ff6a00; font-style: normal; }
+  .hero p { margin-top: 14px; color: #9aa0ae; font-size: 18px; }
+  .hero .btn {
+    display: inline-block; margin-top: 26px;
+    background: #ff6a00; color: #fff; text-decoration: none;
+    padding: 14px 34px; border-radius: 10px; font-weight: bold;
+  }
+
+  /* Каталог */
+  .catalog { padding: 50px 5vw; }
+  h2 { font-size: 28px; margin-bottom: 20px; }
+  h2 span { color: #ff6a00; }
+
+  .filters { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 26px; }
+  .filters button {
+    background: #1e212b; color: #cfd2da; border: 1px solid #2c3040;
+    padding: 8px 18px; border-radius: 20px; cursor: pointer; font-size: 14px;
+  }
+  .filters button.active { background: #ff6a00; border-color: #ff6a00; color: #fff; }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 20px;
+  }
+  .card {
+    background: #171a22; border: 1px solid #262a36; border-radius: 14px;
+    padding: 18px; display: flex; flex-direction: column;
+  }
+  .card .cat { font-size: 12px; color: #ff6a00; text-transform: uppercase; letter-spacing: 1px; }
+  .card h3 { margin: 8px 0 6px; font-size: 17px; }
+  .card p { color: #9aa0ae; font-size: 14px; flex: 1; }
+  .price { font-size: 20px; font-weight: bold; margin: 12px 0; }
+  .card button {
+    background: #2a2f3d; color: #fff; border: 1px solid #3a4053;
+    padding: 10px; border-radius: 8px; cursor: pointer;
+  }
+  .card button:hover { background: #ff6a00; border-color: #ff6a00; }
+
+  /* Админ-панель */
+  .admin { padding: 50px 5vw; background: #12141a; display: none; }
+  .admin.open { display: block; }
+  .admin-form {
+    display: grid; gap: 12px; max-width: 500px;
+    background: #171a22; border: 1px solid #262a36; border-radius: 14px;
+    padding: 20px; margin-bottom: 30px;
+  }
+  .admin-form input, .admin-form select, .admin-form textarea {
+    background: #0f1115; color: #e8e8ee; border: 1px solid #2c3040;
+    padding: 10px; border-radius: 8px; font-size: 14px;
+    font-family: inherit;
+  }
+  .admin-form button {
+    background: #ff6a00; color: #fff; border: none;
+    padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer;
+  }
+  .admin-row {
+    display: flex; flex-wrap: wrap; align-items: center; gap: 10px;
+    background: #171a22; border: 1px solid #262a36;
+    border-radius: 10px; padding: 12px 16px; margin-bottom: 10px;
+  }
+  .admin-row input, .admin-row select {
+    background: #0f1115; color: #e8e8ee; border: 1px solid #2c3040;
+    padding: 8px; border-radius: 6px; font-size: 14px;
+  }
+  .admin-row .name { flex: 2; min-width: 140px; }
+  .admin-row .cat  { flex: 1; min-width: 100px; }
+  .admin-row .price { width: 100px; }
+  .admin-row .del { background: #3d2020; border-color: #553030; color: #ff8888; cursor: pointer; border-radius: 6px; padding: 8px 12px; }
+  .admin-tools { display: flex; gap: 10px; margin-top: 16px; flex-wrap: wrap; }
+  .admin-tools button { padding: 10px 18px; border-radius: 8px; border: 1px solid #3a4053; cursor: pointer; background: #2a2f3d; color: #fff; }
+  .admin-tools .save { background: #ff6a00; border-color: #ff6a00; font-weight: bold; }
+
+  /* Контакты */
+  .contacts { padding: 50px 5vw 80px; background: #12141a; }
+  .contacts p { margin: 6px 0; color: #cfd2da; }
+
+  footer {
+    text-align: center; padding: 24px; color: #6b7280;
+    border-top: 1px solid #22262f; font-size: 14px;
+  }
+
+  /* Корзина */
+  .cart-panel {
+    position: fixed; top: 0; right: -420px; width: 380px; max-width: 90vw;
+    height: 100%; background: #171a22; border-left: 2px solid #ff6a00;
+    z-index: 20; transition: right .3s; padding: 24px; overflow-y: auto;
+  }
+  .cart-panel.open { right: 0; }
+  .cart-panel h3 { margin-bottom: 16px; }
+  .cart-item {
+    display: flex; justify-content: space-between; gap: 10px;
+    padding: 10px 0; border-bottom: 1px solid #262a36; font-size: 14px;
+  }
+  .cart-item button { background: none; border: none; color: #ff5555; cursor: pointer; }
+  .cart-total { margin: 18px 0; font-size: 18px; font-weight: bold; }
+  .cart-panel .order {
+    width: 100%; background: #ff6a00; color: #fff; border: none;
+    padding: 14px; border-radius: 8px; font-weight: bold; cursor: pointer;
+  }
+  .close-cart {
+    position: absolute; top: 12px; right: 16px;
+    background: none; border: none; color: #9aa0ae; font-size: 22px; cursor: pointer;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">SEO <span>SARATOV</span></div>
+  <nav>
+    <a href="#catalog">Каталог</a>
+    <a href="#contacts">Контакты</a>
+  </nav>
+  <div class="header-btns">
+    <button class="admin-btn" onclick="toggleAdmin()">⚙ Админ</button>
+    <button class="cart-btn" onclick="toggleCart()">Корзина (<span id="cart-count">0</span>)</button>
+  </div>
+</header>
+
+<section class="hero">
+  <h1>Автотовары в <em>Саратове</em></h1>
+  <p>Коврики, чехлы, накидки, колпаки и сигналы — с доставкой по городу.</p>
+  <a class="btn" href="#catalog">Смотреть каталог</a>
+</section>
+
+<section class="catalog" id="catalog">
+  <h2>Каталог <span>товаров</span></h2>
+  <div class="filters" id="filters"></div>
+  <div class="grid" id="grid"></div>
+</section>
+
+<!-- Админ-панель -->
+<section class="admin" id="admin">
+  <h2>Админ<span>-панель</span></h2>
+
+  <div class="admin-form">
+    <input id="new-name" placeholder="Название товара">
+    <select id="new-cat">
+      <option>Коврики</option>
+      <option>Чехлы</option>
+      <option>Накидки</option>
+      <option>Колпаки</option>
+      <option>Сигналы</option>
+    </select>
+    <input id="new-price" type="number" min="0" placeholder="Цена, ₽">
+    <textarea id="new-desc" rows="2" placeholder="Описание"></textarea>
+    <button onclick="addProduct()">Добавить товар</button>
+  </div>
+
+  <div id="admin-list"></div>
+
+  <div class="admin-tools">
+    <button class="save" onclick="saveProducts()">💾 Сохранить изменения</button>
+    <button onclick="resetProducts()">↩ Сбросить к исходному списку</button>
+  </div>
+</section>
+
+<section class="contacts" id="contacts">
+  <h2>Контакты</h2>
+  <p>📍 г. Саратов, улица Аэропорт, 24Б</p>
+  <p>📞 <a href="tel:+79376329723" style="color:#ff6a00">8 937 632 97 23</a></p>
+  <p>🕘 Ежедневно с 8:00 до 18:00</p>
+</section>
+
+<footer>© 2026 SEO SARATOV — автотовары</footer>
+
+<div class="cart-panel" id="cart-panel">
+  <button class="close-cart" onclick="toggleCart()">✕</button>
+  <h3>Корзина</h3>
+  <div id="cart-items"></div>
+  <div class="cart-total">Итого: <span id="cart-total">0</span> ₽</div>
+  <button class="order" onclick="sendOrder()">Оформить заказ</button>
+</div>
+
+<script>
+const DEFAULT_PRODUCTS = [
+  { name: 'Коврики EVA 3D',      cat: 'Коврики', price: 3200, desc: 'Под конкретную модель авто, не пахнут, легко моются.' },
+  { name: 'Коврики резиновые',   cat: 'Коврики', price: 3500, desc: 'Универсальный комплект, всесезонные.' },
+  { name: 'Чехлы на сиденья',    cat: 'Чехлы',   price: 4900, desc: 'Экокожа, подушки безопасности не перекрывают.' },
+  { name: 'Чехол на руль',       cat: 'Чехлы',   price: 800,  desc: 'Натуральная кожа, втачивание под размер.' },
+  { name: 'Накидка с подогревом',cat: 'Накидки', price: 2200, desc: '12V, двойной подогрев, зимний вариант.' },
+  { name: 'Накидка мохер',       cat: 'Накидки', price: 1500, desc: 'Мягкая накидка на передние сиденья.' },
+  { name: 'Колпаки R14',         cat: 'Колпаки', price: 1200, desc: 'Комплект 4 шт., ABS-пластик.' },
+  { name: 'Колпаки R15',         cat: 'Колпаки', price: 2300, desc: 'Комплект 4 шт., стильные диски-имитация.' },
+  { name: 'Сигнал пневмо 2 дудки',cat: 'Сигналы', price: 2700, desc: 'Компрессор 12V, громкость до 135 дБ.' },
+  { name: 'Сигнал «улитка»',     cat: 'Сигналы', price: 1200, desc: 'Парный клаксон, установка вместо штатного.' },
+];
+
+const STORAGE_KEY = 'seo_saratov_products';
+let products;
+try {
+  products = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [...DEFAULT_PRODUCTS];
+} catch { products = [...DEFAULT_PRODUCTS]; }
+
+const cart = {};
+let currentCat = 'Все';
+
+/* ---------- Каталог ---------- */
+function getCats() { return ['Все', ...new Set(products.map(p => p.cat))]; }
+
+function renderFilters() {
+  const filtersDiv = document.getElementById('filters');
+  filtersDiv.innerHTML = '';
+  getCats().forEach(c => {
+    const b = document.createElement('button');
+    b.textContent = c;
+    b.className = c === currentCat ? 'active' : '';
+    b.onclick = () => { currentCat = c; renderCatalog(); };
+    filtersDiv.appendChild(b);
+  });
+}
+
+function renderCatalog() {
+  document.querySelectorAll('.filters button').forEach(b =>
+    b.classList.toggle('active', b.textContent === currentCat));
+
+  const grid = document.getElementById('grid');
+  grid.innerHTML = '';
+  products
+    .filter(p => currentCat === 'Все' || p.cat === currentCat)
+    .forEach(p => {
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.innerHTML = `
+        <div class="cat">${p.cat}</div>
+        <h3>${p.name}</h3>
+        <p>${p.desc}</p>
+        <div class="price">${(+p.price).toLocaleString('ru')} ₽</div>
+        <button onclick="addToCart('${p.name}')">В корзину</button>`;
+      grid.appendChild(card);
+    });
+}
+
+/* ---------- Админ-панель ---------- */
+function toggleAdmin() {
+  document.getElementById('admin').classList.toggle('open');
+  if (document.getElementById('admin').classList.contains('open'))
+    document.getElementById('admin').scrollIntoView({ behavior: 'smooth' });
+}
+
+function renderAdmin() {
+  const list = document.getElementById('admin-list');
+  list.innerHTML = '';
+  const cats = products.map(p => p.cat);
+  products.forEach((p, i) => {
+    const row = document.createElement('div');
+    row.className = 'admin-row';
+    row.innerHTML = `
+      <input class="name" value="${p.name}" onchange="editField(${i}, 'name', this.value)" title="Название">
+      <input class="cat" list="cat-list" value="${p.cat}" onchange="editField(${i}, 'cat', this.value)" title="Категория">
+      <input class="price" type="number" min="0" value="${p.price}" onchange="editField(${i}, 'price', this.value)" title="Цена">
+      <input class="name" value="${p.desc}" onchange="editField(${i}, 'desc', this.value)" title="Описание">
+      <button class="del" onclick="deleteProduct(${i})">Удалить</button>`;
+    list.appendChild(row);
+  });
+  // список существующих категорий для подсказок
+  const dl = document.createElement('datalist');
+  dl.id = 'cat-list';
+  [...new Set(cats)].forEach(c => {
+    dl.innerHTML += `<option value="${c}">`;
+  });
+  list.appendChild(dl);
+}
+
+function editField(i, field, value) {
+  products[i][field] = field === 'price' ? Math.max(0, +value || 0) : value;
+  renderCatalog();
+  renderFilters();
+}
+
+function addProduct() {
+  const name = document.getElementById('new-name').value.trim();
+  const cat = document.getElementById('new-cat').value;
+  const price = +document.getElementById('new-price').value;
+  const desc = document.getElementById('new-desc').value.trim() || 'Описание появится позже.';
+  if (!name || !price) { alert('Укажите название и цену товара'); return; }
+  products.push({ name, cat, price, desc });
+  document.getElementById('new-name').value = '';
+  document.getElementById('new-price').value = '';
+  document.getElementById('new-desc').value = '';
+  saveProducts();
+}
+
+function deleteProduct(i) {
+  if (!confirm('Удалить товар «' + products[i].name + '»?')) return;
+  delete cart[products[i].name];
+  products.splice(i, 1);
+  saveProducts();
+}
+
+function saveProducts() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(products));
+  currentCat = getCats().includes(currentCat) ? currentCat : 'Все';
+  renderCatalog();
+  renderFilters();
+  renderAdmin();
+  updateCart();
+}
+
+function resetProducts() {
+  if (!confirm('Вернуть исходный список товаров? Изменения будут потеряны.')) return;
+  products = [...DEFAULT_PRODUCTS];
+  localStorage.removeItem(STORAGE_KEY);
+  for (const k in cart) delete cart[k];
+  saveProducts();
+}
+
+/* ---------- Корзина ---------- */
+function addToCart(name) {
+  cart[name] = (cart[name] || 0) + 1;
+  updateCart();
+}
+function removeFromCart(name) {
+  delete cart[name];
+  updateCart();
+}
+function updateCart() {
+  const box = document.getElementById('cart-items');
+  box.innerHTML = '';
+  let total = 0, count = 0;
+  for (const [name, qty] of Object.entries(cart)) {
+    const p = products.find(x => x.name === name);
+    if (!p) { delete cart[name]; continue; }
+    total += p.price * qty;
+    count += qty;
+    box.innerHTML += `
+      <div class="cart-item">
+        <span>${p.name} × ${qty}</span>
+        <span>${(p.price * qty).toLocaleString('ru')} ₽
+          <button onclick="removeFromCart('${p.name}')">✕</button></span>
+      </div>`;
+  }
+  document.getElementById('cart-total').textContent = total.toLocaleString('ru');
+  document.getElementById('cart-count').textContent = count;
+}
+function toggleCart() {
+  document.getElementById('cart-panel').classList.toggle('open');
+}
+function sendOrder() {
+  if (!Object.keys(cart).length) { alert('Корзина пуста'); return; }
+  const text = 'Здравствуйте! Хочу заказать:%0A' +
+    Object.entries(cart).map(([n, q]) => `- ${n} × ${q}`).join('%0A');
+  window.open('https://wa.me/79376329723?text=' + text, '_blank');
+}
+
+/* ---------- Старт ---------- */
+renderCatalog();
+renderFilters();
+renderAdmin();
+updateCart();
+</script>
+
+</body>
+</html>
